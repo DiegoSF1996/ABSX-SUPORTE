@@ -77,10 +77,10 @@
           <thead>
             <tr>
               <th scope="col"></th>
-
-              <th scope="col">Operadora</th>
-
-              <th scope="col">Descrição</th>
+              <th scope="col">Nome</th>
+              <th scope="col">E-mail</th>
+              <th scope="col">Situação</th>
+              <th scope="col">Tipo</th>
             </tr>
           </thead>
 
