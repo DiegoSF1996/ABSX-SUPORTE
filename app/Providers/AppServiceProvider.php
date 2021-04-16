@@ -23,10 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(parse_url(url('/'), PHP_URL_SCHEME) == 'HTTPS'){
-
-            URL::forceScheme('https');
-        }
+      
         //
     }
 }
