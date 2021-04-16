@@ -31,6 +31,15 @@
             type="button"
             @click="marcarTodos()"
             class="btn btn-secondary btn-sm"
+          ><span class="fa fa-plus"></span>
+            Novo
+          </button>
+        </div>
+        <div class="mr-2">
+          <button
+            type="button"
+            @click="marcarTodos()"
+            class="btn btn-secondary btn-sm"
           >
             <span class="fa fa-check-square"></span>
 

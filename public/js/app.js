@@ -2256,6 +2256,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2373,6 +2411,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -39011,17 +39058,85 @@ var render = function() {
     _c("div", { staticClass: "mb-3" }, [
       _c("div", { staticClass: "pull-lefth mb-4" }, [
         _c(
-          "button",
+          "div",
           {
-            staticClass: "btn btn-lg btn-secondary",
-            attrs: { type: "button" },
-            on: {
-              click: function($event) {
-                return _vm.$router.push("cad_chamado")
-              }
-            }
+            staticClass: "btn-group",
+            attrs: { role: "group", "aria-label": "Basic example" }
           },
-          [_c("span", { staticClass: "fa fa-plus" })]
+          [
+            _c("div", { staticClass: "mr-2" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-sm btn-secondary",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.$router.push("cad_chamado")
+                    }
+                  }
+                },
+                [
+                  _c("span", { staticClass: "fa fa-plus" }),
+                  _vm._v("\n        Novo  \n      ")
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "mr-2" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary btn-sm",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.marcarTodos()
+                    }
+                  }
+                },
+                [
+                  _c("span", { staticClass: "fa fa-check-square" }),
+                  _vm._v("\n\n          Marcar Todos\n        ")
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "mr-2" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary btn-sm",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.excluir()
+                    }
+                  }
+                },
+                [
+                  _c("span", { staticClass: "fa fa-trash" }),
+                  _vm._v("\n\n          Excluir\n        ")
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "mr-2" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary btn-sm",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.habilitarDesabilitar()
+                    }
+                  }
+                },
+                [_vm._v("\n          Habilitar e Desabilitar\n        ")]
+              )
+            ])
+          ]
         )
       ]),
       _vm._v(" "),
@@ -39333,6 +39448,25 @@ var render = function() {
           attrs: { role: "group", "aria-label": "Basic example" }
         },
         [
+          _c("div", { staticClass: "mr-2" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-secondary btn-sm",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.marcarTodos()
+                  }
+                }
+              },
+              [
+                _c("span", { staticClass: "fa fa-plus" }),
+                _vm._v("\n          Novo\n        ")
+              ]
+            )
+          ]),
+          _vm._v(" "),
           _c("div", { staticClass: "mr-2" }, [
             _c(
               "button",

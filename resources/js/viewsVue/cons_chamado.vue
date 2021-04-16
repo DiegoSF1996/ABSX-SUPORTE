@@ -62,13 +62,51 @@
 
     <div class="mb-3">
       <div class="pull-lefth mb-4">
-            <button
+           <div class="btn-group" role="group" aria-label="Basic example">
+        <div class="mr-2">
+          <button
           type="button"
           @click="$router.push('cad_chamado')"
-          class="btn btn-lg btn-secondary"
+          class="btn btn-sm btn-secondary"
         >
           <span class="fa fa-plus"></span>
+          Novo  
         </button>
+        </div>
+        <div class="mr-2">
+          <button
+            type="button"
+            @click="marcarTodos()"
+            class="btn btn-secondary btn-sm"
+          >
+            <span class="fa fa-check-square"></span>
+
+            Marcar Todos
+          </button>
+        </div>
+
+        <div class="mr-2">
+          <button
+            type="button"
+            @click="excluir()"
+            class="btn btn-secondary btn-sm"
+          >
+            <span class="fa fa-trash"></span>
+
+            Excluir
+          </button>
+        </div>
+
+        <div class="mr-2">
+          <button
+            type="button"
+            @click="habilitarDesabilitar()"
+            class="btn btn-secondary btn-sm"
+          >
+            Habilitar e Desabilitar
+          </button>
+        </div>
+      </div>
         <!-- <router-link :to="{ name: 'cad_chamado' }">
           <button type="button" class="btn btn-lg btn-secondary">
             <span class="fa fa-plus"></span>
