@@ -6,14 +6,13 @@
 
     <div class="form-row">
       <div class="col-md-5 mb-3">
-        <label for="ls_desc_status">Situação</label>
+        <label for="ls_usu_status">Situação</label>
 
         <select
           class="custom-select"
-          id="ls_desc_status"
-          name="desc_status"
-          v-model="filtros.desc_status"
-          @change="lsDescricaoPorOperadora()"
+          name="usu_status"
+          v-model="filtros.usu_status"
+          @change="lsUsuarioPorFiltro()"
         >
           <option selected value="">Todos</option>
 
@@ -26,15 +25,6 @@
 
     <div class="mb-3">
       <div class="btn-group" role="group" aria-label="Basic example">
-        <div class="mr-2">
-          <button
-            type="button"
-            @click="marcarTodos()"
-            class="btn btn-secondary btn-sm"
-          ><span class="fa fa-plus"></span>
-            Novo
-          </button>
-        </div>
         <div class="mr-2">
           <button
             type="button"
@@ -79,6 +69,7 @@
               <th scope="col"></th>
               <th scope="col">Nome</th>
               <th scope="col">E-mail</th>
+              <th scope="col">Telefone</th>
               <th scope="col">Situação</th>
               <th scope="col">Tipo</th>
             </tr>
@@ -88,7 +79,7 @@
             <tr>
               <td>
                 <button
-                  @click="salvar(descricaoSalvar, true)"
+                  @click="salvar(usuarioSalvar, true)"
                   type="button"
                   class="btn btn-success"
                 >
@@ -102,79 +93,124 @@
 
               <td>
                 <input
-                  disabled
+                  readonly
                   type="hidden"
-                  v-model="descricaoSalvar.ope_codigo"
-                  name="op_codigo"
+                  v-model="usuarioSalvar.usu_status"
+                  name="usu_status"
                 />
                 <input
-                  disabled
                   type="text"
-                  v-model="descricaoSalvar.ope_descricao"
-                  name="ope_descricao"
+                  class="form-control"
+                  v-model="usuarioSalvar.usu_nome"
+                  name="usu_nome"
                 />
               </td>
 
               <td>
                 <input
-                  type="text"
-                  v-model="descricaoSalvar.desc_descricao"
-                  name="desc_descricao"
+                  class="form-control"
+                  type="email"
+                  v-model="usuarioSalvar.usu_email"
+                  name="usu_email"
                 />
+              </td>
+              <td>
+                <input
+                  class="form-control"
+                  type="text"
+                  v-model="usuarioSalvar.usu_telefone"
+                  name="usu_telefone"
+                />
+              </td>
+              <td></td>
+              <td>
+                <select
+                  class="custom-select"
+                  name="usu_tipousuario"
+                  v-model="usuarioSalvar.usu_tipousuario"
+                >
+                  <option value="CLI">Cliente</option>
+                  <option value="SUP">Suporte</option>
+                  <option value="ADM">ADM</option>
+                </select>
               </td>
             </tr>
 
-            <tr v-for="descricao in descricoes" :key="descricao.desc_codigo">
+            <tr v-for="usuario in usuarios" :key="usuario.usu_codigo">
               <th scope="row">
                 <div class="form-check">
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    v-model="descricao.desc_check"
-                    v-bind:id="'c' + descricao.desc_check"
+                    v-model="usuario.usu_check"
                   />
-
-                  <label
-                    class="form-check-label"
-                    v-bind:for="'c' + descricao.desc_codigo"
-                  >
-                  </label>
-                </div>
-
-                <div class="custom-control custom-switch">
-                  <input
-                    type="checkbox"
-                    name="desc_status"
-                    v-model="descricao.desc_status"
-                    class="custom-control-input"
-                    v-bind:id="'s' + descricao.desc_codigo"
-                    @change="salvar(descricao, true)"
-                  />
-
-                  <label
-                    class="custom-control-label"
-                    v-bind:for="'s' + descricao.desc_codigo"
-                  ></label>
                 </div>
               </th>
 
               <td>
                 <input
+                  readonly
+                  type="hidden"
+                  name="usu_codigo"
+                  v-model="usuario.usu_codigo"
+                  @change="salvar(usuario, true)"
+                />
+
+                <input
                   type="text"
-                  name="desc_codigo"
-                  disabled
-                  v-model="descricao.ope_descricao"
-                  @change="salvar(descricao, true)"
+                  class="form-control"
+                  name="usu_nome"
+                  v-model="usuario.usu_nome"
+                  @change="salvar(usuario, true)"
                 />
               </td>
 
               <td>
                 <input
                   type="text"
-                  name="ope_descricao"
-                  v-model="descricao.desc_descricao"
-                  @change="salvar(descricao, true)"
+                  class="form-control"
+                  name="usu_email"
+                  v-model="usuario.usu_email"
+                  @change="salvar(usuario, true)"
                 />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="usu_telefone"
+                  v-model="usuario.usu_telefone"
+                  @change="salvar(usuario, true)"
+                />
+              </td>
+              <td>
+                <div class="custom-control custom-switch">
+                  <input
+                    type="checkbox"
+                    name="usu_status"
+                    v-model="usuario.usu_status"
+                    class="custom-control-input"
+                    v-bind:id="'s' + usuario.usu_codigo"
+                    @change="salvar(usuario, true)"
+                  />
+
+                  <label
+                    class="custom-control-label"
+                    v-bind:for="'s' + usuario.usu_codigo"
+                  ></label>
+                </div>
+              </td>
+              <td>
+                <select
+                  class="custom-select"
+                  name="usu_tipousuario"
+                  v-model="usuario.usu_tipousuario"
+                  @change="salvar(usuario, true)"
+                >
+                  <option selected value="CLI">Cliente</option>
+                  <option value="SUP">Suporte</option>
+                  <option value="ADM">ADM</option>
+                </select>
               </td>
             </tr>
           </tbody>
@@ -188,28 +224,29 @@ export default {
   data() {
     return {
       filtros: {},
-      descricaoSalvar: {},
-      operadoras: [],
-      descricoes: [],
+      usuarioSalvar: {},
+      usuarios: [],
       erros: [],
     };
   },
   mounted() {
-    this.lsOperadoras();
-    this.lsDescricaoPorOperadora();
+    //this.lsUsuarios();
+    this.lsUsuarioPorFiltro();
   },
   methods: {
-    salvar(descricao, atualiza = false) {
-      if (descricao.desc_status == undefined) {
-        descricao.desc_status = true;
+    salvar(usuario, atualiza = false) {
+      if (usuario.usu_status == undefined) {
+        usuario.usu_status = true;
       }
       axios
-        .post("/api/salvarDescricao", descricao)
+        .post("/api/salvarUsuario", usuario)
         .then((res) => {
+          console.log(res.data);
+
           if (atualiza == true) {
-            this.descricaoSalvar.desc_descricao = null;
-            this.descricoes = {};
-            this.lsDescricaoPorOperadora();
+            this.limpar();
+            //this.usuarios = {};
+            this.lsUsuarioPorFiltro();
           }
         })
         .catch((error) => {
@@ -218,64 +255,59 @@ export default {
         });
     },
     marcarTodos() {
-      this.descricoes.forEach((op, indice) => {
-        Vue.set(this.descricoes[indice], "desc_check", true);
+      this.usuarios.forEach((op, indice) => {
+        this.$set(this.usuarios[indice], "usu_check", true);
       });
     },
     habilitarDesabilitar() {
-      this.descricoes.forEach((op, indice) => {
-        if (this.descricoes[indice].desc_check == true) {
-          if (this.descricoes[indice].desc_status == true) {
-            Vue.set(this.descricoes[indice], "desc_status", false);
+      this.usuarios.forEach((op, indice) => {
+        if (this.usuarios[indice].usu_check == true) {
+          if (this.usuarios[indice].usu_status == true) {
+            this.$set(this.usuarios[indice], "usu_status", false);
           } else {
-            Vue.set(this.descricoes[indice], "desc_status", true);
+            this.$set(this.usuarios[indice], "usu_status", true);
           }
-          this.salvar(this.descricoes[indice], false);
+          this.salvar(this.usuarios[indice], false);
         }
       });
-      this.lsDescricaoPorOperadora();
+      this.lsUsuarioPorFiltro();
     },
     excluir() {
-      axios
-        .post("/api/excluirDescricoes", this.descricoes)
-        .then((res) => {
-          this.lsDescricaoPorOperadora();
+      this.$confirm("Deseja Excluir?")
+        .then(() => {
+          axios
+            .post("/api/excluirUsuario", this.usuarios)
+            .then((res) => {
+              this.$toasted.success("Removido com sucesso !!!").goAway(1500);
+              this.lsUsuarioPorFiltro();
+            })
+            .catch((error) => {
+              this.erros = error.response.data.errors;
+            });
         })
         .catch((error) => {
-          this.erros = error.response.data.errors;
+          console.log(error);
         });
     },
     limpar() {
-      this.descricaoSalvar = {};
+      this.usuarioSalvar = {};
     },
 
-    lsOperadoras() {
-      axios
-        .get("/api/lsOperadoras")
-        .then((res) => {
-          this.operadoras = res.data;
-        })
-        .catch((error) => {
-          this.erros = error.response.data.errors;
-        });
-    },
-    lsDescricaoPorOperadora() {
-      var keyy = Object.keys(this.operadoras).find(
-        (key) => this.operadoras[key].ope_codigo == this.filtros.ope_codigo
+    lsUsuarioPorFiltro() {
+      var keyy = Object.keys(this.usuarios).find(
+        (key) => this.usuarios[key].usu_status == this.filtros.usu_status
       );
       if (keyy != undefined) {
-        this.descricaoSalvar.ope_descricao = this.operadoras[
-          keyy
-        ].ope_descricao;
-        this.descricaoSalvar.ope_codigo = this.filtros.ope_codigo;
+        this.usuarioSalvar.usu_nome = this.usuarios[keyy].usu_nome;
+        this.usuarioSalvar.usu_status = this.filtros.usu_status;
       } else {
-        this.descricaoSalvar.ope_codigo = null;
-        this.descricaoSalvar.ope_descricao = null;
+        this.usuarioSalvar.usu_status = null;
+        this.usuarioSalvar.usu_nome = null;
       }
       axios
-        .post("/api/lsDescricaoPorOperadora", this.filtros)
+        .post("/api/lsUsuarioPorFiltro", this.filtros)
         .then((res) => {
-          this.descricoes = res.data;
+          this.usuarios = res.data;
         })
         .catch((error) => {
           this.erros = error.response.data.errors;

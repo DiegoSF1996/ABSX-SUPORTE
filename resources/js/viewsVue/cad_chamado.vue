@@ -8,32 +8,44 @@
       <div class="col-md-12">
         <div class="form-row mb-2">
           <div class="col-md-2">
-            <label for="cha_datacriacao" class="form-label">Data Criação</label>
+            <label class="form-label" v-bind:for="'c' + chamado.cha_codigo"
+              >Data Criação
+            </label>
+
             <input
               class="form-control"
               type="date"
               name="cha_datacriacao"
-              id="cha_datacriacao"
+              v-model="chamado.cha_datacriacao"
+              v-bind:id="'c' + chamado.cha_codigo"
             />
           </div>
-
-          <div class="col-md-5">
-            <label for="cha_assunto" class="form-label">Cliente</label>
-            <input
-              class="form-control"
-              type="text"
-              name="cha_assunto"
-              id="cha_assunto"
-            />
-          </div>
-          <div class="col-md-5">
-            <label for="cha_assunto" class="form-label">Suporte</label>
-            <input
-              class="form-control"
-              type="text"
-              name="cha_assunto"
-              id="cha_assunto"
-            />
+          <div
+            v-show="
+              chamado.cha_cliente ||
+              (this.$root.usuario.logado == true &&
+                this.$root.usuario.dadosUsuario.usu_tipousuario == 'ADM')
+            "
+          >
+            >
+            <div class="col-md-5">
+              <label for="cha_assunto" class="form-label">Cliente</label>
+              <input
+                class="form-control"
+                type="text"
+                name="cha_assunto"
+                id="cha_assunto"
+              />
+            </div>
+            <div class="col-md-5">
+              <label for="cha_assunto" class="form-label">Suporte</label>
+              <input
+                class="form-control"
+                type="text"
+                name="cha_assunto"
+                id="cha_assunto"
+              />
+            </div>
           </div>
         </div>
         <div class="form-row">
@@ -46,21 +58,30 @@
               id="cha_assunto"
             />
           </div>
-          <div class="col-md-2">
-            <label for="ls_desc_status">Situação</label>
-            <select
-              class="custom-select"
-              id="ls_desc_status"
-              name="desc_status"
-              v-model="filtros.desc_status"
-              @change="lsDescricaoPorOperadora()"
+          <div
+            v-show="
+              chamado.cha_cliente ||
+              (this.$root.usuario.logado == true &&
+                this.$root.usuario.dadosUsuario.usu_tipousuario == 'ADM')
+            "
+          >
             >
-              <option selected value="">Todos</option>
 
-              <option value="1">Ativado</option>
+            <div class="col-md-2">
+              <label for="ls_desc_status">Situação</label>
+              <select
+                class="custom-select"
+                id="ls_desc_status"
+                name="desc_status"
+                v-model="filtros.desc_status"
+              >
+                <option selected value="">Todos</option>
 
-              <option value="0">Desativado</option>
-            </select>
+                <option value="1">Ativado</option>
+
+                <option value="0">Desativado</option>
+              </select>
+            </div>
           </div>
           <div class="col-md-12 mb-2">
             <label for="cha_descricao" class="form-label">Descrição</label>
@@ -73,7 +94,13 @@
           </div>
         </div>
         <div class="pull-right">
-          <button type="button"  class="btn btn-md btn-primary" v-on:click.stop.prevent="say('hi')">Salvar</button>
+          <button
+            type="button"
+            class="btn btn-md btn-primary"
+            v-on:click.stop.prevent="say('hi')"
+          >
+            Salvar
+          </button>
         </div>
       </div>
     </form>
@@ -84,9 +111,8 @@ export default {
   data() {
     return {
       filtros: {},
-      descricaoSalvar: {},
-      operadoras: [],
-      descricoes: [],
+
+      chamado: [],
       erros: [],
     };
   },
@@ -95,20 +121,20 @@ export default {
     this.lsDescricaoPorOperadora();
   },
   methods: {
-        say: function (message) {
+    say: function (message) {
       alert(message);
     },
 
     salvar(descricao, atualiza = false) {
-      if (descricao.desc_status == undefined) {
-        descricao.desc_status = true;
+      if (chamado.desc_status == undefined) {
+        chamado.desc_status = true;
       }
       axios
         .post("/api/salvarDescricao", descricao)
         .then((res) => {
           if (atualiza == true) {
             this.descricaoSalvar.desc_descricao = null;
-            this.descricoes = {};
+            this.chamado = {};
             this.lsDescricaoPorOperadora();
           }
         })
@@ -118,26 +144,26 @@ export default {
         });
     },
     marcarTodos() {
-      this.descricoes.forEach((op, indice) => {
-        Vue.set(this.descricoes[indice], "desc_check", true);
+      this.chamado.forEach((op, indice) => {
+        Vue.set(this.chamado[indice], "desc_check", true);
       });
     },
     habilitarDesabilitar() {
-      this.descricoes.forEach((op, indice) => {
-        if (this.descricoes[indice].desc_check == true) {
-          if (this.descricoes[indice].desc_status == true) {
-            Vue.set(this.descricoes[indice], "desc_status", false);
+      this.chamado.forEach((op, indice) => {
+        if (this.chamado[indice].desc_check == true) {
+          if (this.chamado[indice].desc_status == true) {
+            Vue.set(this.chamado[indice], "desc_status", false);
           } else {
-            Vue.set(this.descricoes[indice], "desc_status", true);
+            Vue.set(this.chamado[indice], "desc_status", true);
           }
-          this.salvar(this.descricoes[indice], false);
+          this.salvar(this.chamado[indice], false);
         }
       });
       this.lsDescricaoPorOperadora();
     },
     excluir() {
       axios
-        .post("/api/excluirDescricoes", this.descricoes)
+        .post("/api/excluirDescricoes", this.chamado)
         .then((res) => {
           this.lsDescricaoPorOperadora();
         })
@@ -175,7 +201,7 @@ export default {
       axios
         .post("/api/lsDescricaoPorOperadora", this.filtros)
         .then((res) => {
-          this.descricoes = res.data;
+          this.chamado = res.data;
         })
         .catch((error) => {
           this.erros = error.response.data.errors;

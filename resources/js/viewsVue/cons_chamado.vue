@@ -6,22 +6,17 @@
 
     <div class="form-row mb-3">
       <div class="col-md-3 mb-3">
-        <label for="ls_ope_codigo">Situação</label>
+        <label for="ls_cha_codigo">Situação</label>
         <select
           class="custom-select"
-          id="ls_ope_codigo"
-          name="ls_ope_codigo"
-          v-model="filtros.ope_codigo"
-          @change="lsDescricaoPorOperadora()"
+          id="ls_cha_codigo"
+          name="ls_cha_codigo"
+          v-model="filtros.cha_situacao"
         >
           <option selected value="">Todos</option>
-          <option
-            v-for="operadora in operadoras"
-            :key="operadora.ope_codigo"
-            :value="operadora.ope_codigo"
-          >
-            {{ operadora.ope_descricao }}
-          </option>
+          <option value="aberto">Aberto</option>
+          <option value="andamento">Em Andamento</option>
+          <option value="resolvido">Resolvido</option>
         </select>
       </div>
 
@@ -32,7 +27,6 @@
           id="ls_desc_status"
           name="desc_status"
           v-model="filtros.desc_status"
-          @change="lsDescricaoPorOperadora()"
         >
           <option selected value="">Todos</option>
 
@@ -49,7 +43,7 @@
           id="ls_desc_status"
           name="desc_status"
           v-model="filtros.desc_status"
-          @change="lsDescricaoPorOperadora()"
+          
         >
           <option selected value="">Todos</option>
 
@@ -62,51 +56,51 @@
 
     <div class="mb-3">
       <div class="pull-lefth mb-4">
-           <div class="btn-group" role="group" aria-label="Basic example">
-        <div class="mr-2">
-          <button
-          type="button"
-          @click="$router.push('cad_chamado')"
-          class="btn btn-sm btn-secondary"
-        >
-          <span class="fa fa-plus"></span>
-          Novo  
-        </button>
-        </div>
-        <div class="mr-2">
-          <button
-            type="button"
-            @click="marcarTodos()"
-            class="btn btn-secondary btn-sm"
-          >
-            <span class="fa fa-check-square"></span>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <div class="mr-2">
+            <button
+              type="button"
+              @click="$router.push('cad_chamado')"
+              class="btn btn-sm btn-secondary"
+            >
+              <span class="fa fa-plus"></span>
+              Novo
+            </button>
+          </div>
+          <div class="mr-2">
+            <button
+              type="button"
+              @click="marcarTodos()"
+              class="btn btn-secondary btn-sm"
+            >
+              <span class="fa fa-check-square"></span>
 
-            Marcar Todos
-          </button>
-        </div>
+              Marcar Todos
+            </button>
+          </div>
 
-        <div class="mr-2">
-          <button
-            type="button"
-            @click="excluir()"
-            class="btn btn-secondary btn-sm"
-          >
-            <span class="fa fa-trash"></span>
+          <div class="mr-2">
+            <button
+              type="button"
+              @click="excluir()"
+              class="btn btn-secondary btn-sm"
+            >
+              <span class="fa fa-trash"></span>
 
-            Excluir
-          </button>
-        </div>
+              Excluir
+            </button>
+          </div>
 
-        <div class="mr-2">
-          <button
-            type="button"
-            @click="habilitarDesabilitar()"
-            class="btn btn-secondary btn-sm"
-          >
-            Habilitar e Desabilitar
-          </button>
+          <div class="mr-2">
+            <button
+              type="button"
+              @click="habilitarDesabilitar()"
+              class="btn btn-secondary btn-sm"
+            >
+              Habilitar e Desabilitar
+            </button>
+          </div>
         </div>
-      </div>
         <!-- <router-link :to="{ name: 'cad_chamado' }">
           <button type="button" class="btn btn-lg btn-secondary">
             <span class="fa fa-plus"></span>
@@ -168,7 +162,7 @@
                   type="text"
                   name="desc_codigo"
                   disabled
-                  v-model="descricao.ope_descricao"
+                  v-model="descricao.cha_codigo"
                   @change="salvar(descricao, true)"
                 />
               </td>
@@ -176,7 +170,7 @@
               <td>
                 <input
                   type="text"
-                  name="ope_descricao"
+                  name="cha_codigo"
                   v-model="descricao.desc_descricao"
                   @change="salvar(descricao, true)"
                 />
@@ -194,14 +188,15 @@ export default {
     return {
       filtros: {},
       descricaoSalvar: {},
-      operadoras: [],
+      chamados: [],
       descricoes: [],
       erros: [],
     };
   },
   mounted() {
-    this.lsOperadoras();
-    this.lsDescricaoPorOperadora();
+    this.lschamados();
+    
+    this.$root.usuario.logado = true;
   },
   methods: {
     salvar(descricao, atualiza = false) {
@@ -214,7 +209,7 @@ export default {
           if (atualiza == true) {
             this.descricaoSalvar.desc_descricao = null;
             this.descricoes = {};
-            this.lsDescricaoPorOperadora();
+            
           }
         })
         .catch((error) => {
@@ -238,13 +233,13 @@ export default {
           this.salvar(this.descricoes[indice], false);
         }
       });
-      this.lsDescricaoPorOperadora();
+      
     },
     excluir() {
       axios
         .post("/api/excluirDescricoes", this.descricoes)
         .then((res) => {
-          this.lsDescricaoPorOperadora();
+          
         })
         .catch((error) => {
           this.erros = error.response.data.errors;
@@ -254,38 +249,17 @@ export default {
       this.descricaoSalvar = {};
     },
 
-    lsOperadoras() {
+    lschamados() {
       axios
-        .get("/api/lsOperadoras")
+        .get("/api/lschamados")
         .then((res) => {
-          this.operadoras = res.data;
+          this.chamados = res.data;
         })
         .catch((error) => {
           this.erros = error.response.data.errors;
         });
     },
-    lsDescricaoPorOperadora() {
-      var keyy = Object.keys(this.operadoras).find(
-        (key) => this.operadoras[key].ope_codigo == this.filtros.ope_codigo
-      );
-      if (keyy != undefined) {
-        this.descricaoSalvar.ope_descricao = this.operadoras[
-          keyy
-        ].ope_descricao;
-        this.descricaoSalvar.ope_codigo = this.filtros.ope_codigo;
-      } else {
-        this.descricaoSalvar.ope_codigo = null;
-        this.descricaoSalvar.ope_descricao = null;
-      }
-      axios
-        .post("/api/lsDescricaoPorOperadora", this.filtros)
-        .then((res) => {
-          this.descricoes = res.data;
-        })
-        .catch((error) => {
-          this.erros = error.response.data.errors;
-        });
-    },
+
   },
 };
 </script>
